@@ -32,7 +32,7 @@ get_edges<-function(obj,color="color",width="size",name="names",type="2d",...){
     opts<-list(mode="lines",type="scatter3d",...)
   }
   #split list for element mapping (could be done together?)
-  mappings<-obj$edges[,c(color,size),drop=FALSE]
+  mappings<-obj$edges[,c(color,width),drop=FALSE]
   segs<-rep(1:(nrow(obj$edges)/2),each=2)
   if(!is.null(mappings)){
     id<-lapply(1:nrow(mappings),function(i){
