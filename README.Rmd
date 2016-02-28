@@ -2,13 +2,13 @@
 output: 
   html_document: 
     keep_md: yes
+    self_contained: no
 ---
 
 # Description
-
+## Network visualization using [Plotly](https://github.com/ropensci/plotly).
 
 # Install
-
 ```{r,eval=FALSE}
 devtools::install_github("dgrapov/networkly.git")
 ```
@@ -43,12 +43,12 @@ head(edge.list)
 ```
 
 ## `Node Attributes` describing variables
-```{r}
+```{r,eval=FALSE}
 head(node.data)
 ```
 
 ## Create 2D network
-```{r,message=FALSE,warning=FALSE}
+```{r,eval=FALSE}
 library(networkly)
 library(plotly)
 layout<-"fruchtermanreingold" #see networkly::get_network for 2D and 3D options
@@ -78,8 +78,12 @@ layout(net,
 
 ```
 
+![](inst/www/img/2dnetwork.png)
+
+### [See live graph](http://dgrapov.github.io/networkly/).
+
 ## Create 3D network
-```{r,message=FALSE,warning=FALSE}
+```{r,eval=FALSE}
 
 #net params
 type<-"3d"
@@ -105,6 +109,9 @@ layout(net,
 
 ```
 
+![](inst/www/img/3dnetwork.png)
+
+### [See live graph](http://dgrapov.github.io/networkly/).
 
 ## Shiny
 ## `ui.R`
@@ -130,7 +137,7 @@ networklyShiny()
 ```
 
 ## Limitations
-#### To allow edge widths in 2D and 3D networks and to properly render edge paths in 3D networks each edge element is an indepnedent list item. The shown edge and node legends are place holders which do not correctly show or hide components. This can be changed during the network creation procces by using `showlegend=TRUE` and not creating a place holder legend as shown below. For 2D networks edge segments can be renderd from a vector with intermittent NAs e.g. `x/y/z = source1 target1 NA source2 target2` this currently does not work for 3D networks.
+#### To allow edge widths in 2D and 3D networks and to properly render edge paths in 3D networks each edge element is an independent list item. The shown edge and node legends are place holders which do not correctly show or hide components. This can be changed during the network creation procces by using `showlegend=TRUE` and not creating a place holder legend as shown below. For 2D networks edge segments can be renderd from a vector with intermittent NAs e.g. `x/y/z = source1 target1 NA source2 target2` this currently does not work for 3D networks. Basic 2D networks can instead be created from ggplot networks using `plotly::ggplotly`.
 ```{r,eval=FALSE}
 net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE))
 shiny_ly(net)
@@ -139,6 +146,3 @@ shiny_ly(net)
 ## About
 ### updated `r Sys.Date()`
 
-```{r}
-sessionInfo()
-```
