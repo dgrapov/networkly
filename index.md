@@ -1,21 +1,18 @@
----
-output: 
-  html_document: 
-    keep_md: yes
----
 
 # Description
 
 
 # Install
 
-```{r,eval=FALSE}
+
+```r
 devtools::install_github("dgrapov/networkly.git")
 ```
 
 # Examples
 ## Create network `Edge List` and `Node Attributes`
-```{r}
+
+```r
 #set up network structure
 conn<-1 # average number of conenctions per variable
 nodes<-10 # number of variables
@@ -38,17 +35,40 @@ node.data<-data.frame(color=sample(rainbow(10),nodes,replace=TRUE)[id2],
                       names=sample(LETTERS[1:5],nodes,replace=TRUE)[id2],stringsAsFactors = FALSE)
 ```
 ## `Edge List` describing network connections
-```{r}
+
+```r
 head(edge.list)
 ```
 
+```
+##   source target     color size names
+## 1      4      5 #FF0000FF    8     a
+## 2      1      3 #00FFFFFF    5     b
+## 3      3      7 #00FFFFFF    5     b
+## 4      3      3 #00FFFFFF    5     b
+## 5      2      3 #00FFFFFF    5     b
+## 6      6      3 #FF0000FF    8     a
+```
+
 ## `Node Attributes` describing variables
-```{r}
+
+```r
 head(node.data)
 ```
 
+```
+##       color      size names
+## 1 #FF0000FF  8.333333     C
+## 2 #0066FFFF  6.111111     A
+## 3 #FF9900FF  9.444444     D
+## 4 #FF9900FF  9.444444     D
+## 5 #FF9900FF 15.000000     B
+## 6 #CC00FFFF  9.444444     C
+```
+
 ## Create 2D network
-```{r,message=FALSE,warning=FALSE}
+
+```r
 library(networkly)
 library(plotly)
 layout<-"fruchtermanreingold" #see networkly::get_network for 2D and 3D options
@@ -75,12 +95,12 @@ net<-shiny_ly(net) # works in or out of shiny
 layout(net,
        xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'),
        yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'))
-
 ```
+<iframe id="example1" src="https://raw.githubusercontent.com/dgrapov/networkly/gh-pages/inst/www/html/2dnetwork.html" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
 
 ## Create 3D network
-```{r,message=FALSE,warning=FALSE}
 
+```r
 #net params
 type<-"3d"
 
@@ -102,20 +122,20 @@ layout(net,
                       yaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
                       xaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
                       zaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title="")))
-
 ```
-
+<iframe id="example2" src="https://raw.githubusercontent.com/dgrapov/networkly/gh-pages/inst/www/html/3dnetwork.html" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
 
 ## Shiny
 ## `ui.R`
-```{r,eval=FALSE}
+
+```r
 shinyUI(bootstrapPage(
     plotlyOutput("network")
 ))
-
 ```
 ## `server.R` 
-```{r,eval=FALSE}
+
+```r
 shinyServer(function(session,input, output) {
   output$network<-renderPlotly({
     #network creation script goes here
@@ -125,20 +145,44 @@ shinyServer(function(session,input, output) {
 })
 ```
 ## Run Demo App or try [HERE](http://ec2-52-22-43-130.compute-1.amazonaws.com:3838/demos/networkly/)
-```{r, eval=FALSE}
+
+```r
 networklyShiny()
 ```
 
 ## Limitations
 #### To allow edge widths in 2D and 3D networks and to properly render edge paths in 3D networks each edge element is an indepnedent list item. The shown edge and node legends are place holders which do not correctly show or hide components. This can be changed during the network creation procces by using `showlegend=TRUE` and not creating a place holder legend as shown below. For 2D networks edge segments can be renderd from a vector with intermittent NAs e.g. `x/y/z = source1 target1 NA source2 target2` this currently does not work for 3D networks.
-```{r,eval=FALSE}
+
+```r
 net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE))
 shiny_ly(net)
-```  
+```
 
 ## About
-### updated `r Sys.Date()`
+### updated 2016-02-27
 
-```{r}
+
+```r
 sessionInfo()
+```
+
+```
+## R version 3.2.3 (2015-12-10)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 8.1 x64 (build 9600)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## loaded via a namespace (and not attached):
+##  [1] magrittr_1.5  formatR_1.2.1 tools_3.2.3   htmltools_0.3 yaml_2.1.13  
+##  [6] stringi_1.0-1 rmarkdown_0.9 knitr_1.12    stringr_1.0.0 digest_0.6.9 
+## [11] evaluate_0.8
 ```
