@@ -2,6 +2,9 @@
 
 library(plotly)
 library(networkly)
+library(htmlwidgets)
+setwd("inst/www/html/")
+
 
 #setup
 conn<-1 # average number of conenctions per variable
@@ -36,7 +39,7 @@ net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none"
 
 legend<-format_legend(obj,node.data=node.data)
 
-net2<-c(net,c(get_edges(legend,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(legend,node.data=legend$node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE)))
+net<-c(net,c(get_edges(legend,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(legend,node.data=legend$node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE)))
 
 
 net<-shiny_ly(net) # works in or out of shiny
@@ -47,8 +50,6 @@ p<-layout(net,
          xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'),
          yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'))
 #save
-library(htmlwidgets)
-setwd("inst/www/html/")
 saveWidget(as.widget(p), file='2dnetwork.html')
 
 #3D
@@ -59,6 +60,12 @@ size<-'size'
 name<-'names'
 obj<-get_network(edge.list,type=type,layout=layout)
 net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=FALSE),get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=FALSE))
+
+net<-c(net,c(get_edges(legend,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(legend,node.data=legend$node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE)))
+
+
+net<-shiny_ly(net) # works in or out of shiny
+
 
 p<-layout(net,
          scene = list(showlegend=TRUE,

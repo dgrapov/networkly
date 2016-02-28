@@ -13,6 +13,8 @@ devtools::install_github("dgrapov/networkly.git")
 ## Create network `Edge List` and `Node Attributes`
 
 ```r
+library(networkly)
+library(plotly)
 #set up network structure
 conn<-1 # average number of conenctions per variable
 nodes<-10 # number of variables
@@ -69,8 +71,6 @@ head(node.data)
 ## Create 2D network
 
 ```r
-library(networkly)
-library(plotly)
 layout<-"fruchtermanreingold" #see networkly::get_network for 2D and 3D options
 
 #net params
@@ -96,7 +96,7 @@ layout(net,
        xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'),
        yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'))
 ```
-<iframe id="example1" src="https://raw.githubusercontent.com/dgrapov/networkly/gh-pages/inst/www/html/2dnetwork.html" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
+<iframe id="example1" src="./inst/www/html/2dnetwork.html" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
 
 
 ## Create 3D network
@@ -124,7 +124,7 @@ layout(net,
                       xaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
                       zaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title="")))
 ```
-<iframe id="example2" src="https://raw.githubusercontent.com/dgrapov/networkly/gh-pages/inst/www/html/3dnetwork.html" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
+<iframe id="example2" src="./inst/www/html/3dnetwork.html"" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
 
 ## Shiny
 ## `ui.R`
@@ -182,8 +182,16 @@ sessionInfo()
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
+## other attached packages:
+## [1] plotly_2.4.4  ggplot2_2.0.0 networkly_0.1
+## 
 ## loaded via a namespace (and not attached):
-##  [1] magrittr_1.5  formatR_1.2.1 tools_3.2.3   htmltools_0.3 yaml_2.1.13  
-##  [6] stringi_1.0-1 rmarkdown_0.9 knitr_1.12    stringr_1.0.0 digest_0.6.9 
-## [11] evaluate_0.8
+##  [1] Rcpp_0.12.3      knitr_1.12       magrittr_1.5     network_1.12.0  
+##  [5] munsell_0.4.3    colorspace_1.2-6 R6_2.1.2         stringr_1.0.0   
+##  [9] httr_1.1.0       plyr_1.8.3       dplyr_0.4.1      tools_3.2.3     
+## [13] parallel_3.2.3   grid_3.2.3       gtable_0.1.2     sna_2.3-2       
+## [17] DBI_0.3.1        htmltools_0.3    yaml_2.1.13      assertthat_0.1  
+## [21] digest_0.6.9     gridExtra_2.0.0  formatR_1.2.1    viridis_0.3.2   
+## [25] htmlwidgets_0.5  base64enc_0.1-3  evaluate_0.8     rmarkdown_0.9   
+## [29] stringi_1.0-1    scales_0.3.0     jsonlite_0.9.19
 ```
