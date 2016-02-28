@@ -98,6 +98,7 @@ layout(net,
 ```
 <iframe id="example1" src="https://raw.githubusercontent.com/dgrapov/networkly/gh-pages/inst/www/html/2dnetwork.html" style="border: none; width: 100%; height: 500px" frameborder="0"></iframe>
 
+
 ## Create 3D network
 
 ```r
@@ -159,7 +160,7 @@ shiny_ly(net)
 ```
 
 ## About
-### updated 2016-02-27
+### updated 2016-02-28
 
 
 ```r
