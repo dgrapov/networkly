@@ -5,7 +5,7 @@
 # Install
 
 ```r
-devtools::install_github("dgrapov/networkly.git")
+devtools::install_github("dgrapov/networkly")
 ```
 
 # Examples
