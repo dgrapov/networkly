@@ -5,7 +5,7 @@
 # Install
 
 ```r
-devtools::install_github("dgrapov/networkly.git")
+devtools::install_github("dgrapov/networkly")
 ```
 
 # Examples
@@ -139,7 +139,7 @@ shinyServer(function(session,input, output) {
   })
 })
 ```
-## Run Demo App or try [HERE](http://ec2-52-22-43-130.compute-1.amazonaws.com:3838/demos/networkly/)
+## Run Demo App
 
 ```r
 networklyShiny()
