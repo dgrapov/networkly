@@ -32,18 +32,18 @@ get_edges<-function(obj,color="color",width="size",name="names",type="2d",...){
     opts<-list(mode="lines",type="scatter3d",...)
   }
   #split list for element mapping (could be done together?)
-  mappings<-obj$edges[,c(color,width),drop=FALSE]
+  # mappings<-obj$edges[,c(color,width),drop=FALSE]
   segs<-rep(1:(nrow(obj$edges)/2),each=2)
-  if(!is.null(mappings)){
-    id<-lapply(1:nrow(mappings),function(i){
-      paste(paste(mappings[i,],collapse="_"),segs[i])
-    })
-    id<-unlist(id)
-    el<-split(obj$edges,id)
-
-  } else {
-    el<-split(obj$edges,segs)
-  }
+  # if(!is.null(mappings)){
+  #   id<-lapply(1:nrow(mappings),function(i){
+  #     paste(paste(mappings[i,],collapse="_"),segs[i])
+  #   })
+  #   id<-unlist(id)
+  #   el<-split(obj$edges,id)
+  #
+  # } else {
+    el<-split(obj$edges,segs) # split all
+  # }
 
   #need to split into induvidual segments, for 3d and size maping to work
 
@@ -66,9 +66,11 @@ get_edges<-function(obj,color="color",width="size",name="names",type="2d",...){
 
 #' @title get_nodes
 #' @export
+#' @import dplyr
 get_nodes<-function(obj,node.data=NULL,color="color",size="size",name="names",type="2d",...){
   if(!is.null(node.data)){
-    node.data<-cbind(obj$nodes,node.data)
+    #merge with nodes based on rowname
+    node.data<-cbind(obj$nodes,node.data[rownames(obj$nodes),])
   }
   #set net opts
   if(type == "2d"){
@@ -77,7 +79,7 @@ get_nodes<-function(obj,node.data=NULL,color="color",size="size",name="names",ty
     opts<-list(mode="markers",type="scatter3d",...)
   }
   #split list for element mapping (could be done together?)
-  mappings<-node.data[,c(color,size),drop=FALSE]
+  mappings<-node.data[,c(color,size,name),drop=FALSE]
   if(!is.null(mappings)){
     id<-lapply(1:nrow(mappings),function(i){
       paste(mappings[i,],collapse="_")
@@ -95,10 +97,10 @@ get_nodes<-function(obj,node.data=NULL,color="color",size="size",name="names",ty
     res[[i]]<-c(list(x=tmp$x,
                      y=tmp$y,
                      z=tmp$z,
-                     name = tmp[,name][1],
+                     name = unique(tmp[,name]),
                      marker=list(
-                       color = rgb_col(tmp[,color][1]),
-                       size = tmp[,size][1])
+                       color = unique(rgb_col(tmp[,color])),
+                       size = unique(tmp[,size]))
     ),opts)
   }
   return(res)
