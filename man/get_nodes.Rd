@@ -5,7 +5,7 @@
 \title{get_nodes}
 \usage{
 get_nodes(obj, node.data = NULL, color = "color", size = "size",
-  name = "names", type = "2d", ...)
+  name = "names", type = "2d", merge = TRUE, ...)
 }
 \description{
 get_nodes

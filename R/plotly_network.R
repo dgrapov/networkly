@@ -1,26 +1,5 @@
 
 
-#' @title network_ly
-#' @import dplyr plotly
-#' @export
-network_ly<-function(edge.list,node.data,color="color",size="size",name="names",type="2d"){
-
-  obj<-get_network(edge.list,type=type)
-  net<-c(get_edges(obj,color=color,size=size,name=name,type=type),get_nodes(obj,node.data,color=color,size=size,name=name,type=type)) %>%
-    plotly_build(.) %>% list_ggplotly(.)
-  if(type=="2d"){
-    layout(net,
-           xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'),
-           yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE, zeroline = FALSE, hoverformat = '.2f'))
-  } else{
-    layout(net,
-           scene = list(showlegend=TRUE,
-                        yaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
-                        xaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
-                        zaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title="")))
-  }
-}
-
 #' @title get_edges
 #' @export
 get_edges<-function(obj,color="color",width="size",name="names",type="2d",...){
@@ -55,10 +34,10 @@ get_edges<-function(obj,color="color",width="size",name="names",type="2d",...){
     res[[i]]<-c(list(x=tmp$x,
                      y=tmp$y,
                      z=tmp$z,
-                     name = tmp[,name][1],
+                     name = tryCatch(tmp[,name][1],error=function(e){NULL}), # TODO: fix hack
                      line=list(
-                       color = rgb_col(tmp[,color])[1],
-                       width = as.numeric(as.character(tmp[,width][1]))) # why is this a factor?
+                       color = ifelse(is.null(rgb_col(tmp[,color])[1]),rgb_col("gray"),rgb_col(tmp[,color])[1]),
+                       width = tryCatch(as.numeric(as.character(tmp[,width][1])),error=function(e){5})) # why is this a factor?
     ),opts)
   }
   return(res)
@@ -67,8 +46,8 @@ get_edges<-function(obj,color="color",width="size",name="names",type="2d",...){
 #' @title get_nodes
 #' @export
 #' @import dplyr
-get_nodes<-function(obj,node.data=NULL,color="color",size="size",name="names",type="2d",...){
-  if(!is.null(node.data)){
+get_nodes<-function(obj,node.data=NULL,color="color",size="size",name="names",type="2d",merge=TRUE,...){
+  if(!is.null(node.data) & merge){
     #merge with nodes based on rowname
     node.data<-cbind(obj$nodes,node.data[rownames(obj$nodes),])
   }
@@ -104,6 +83,31 @@ get_nodes<-function(obj,node.data=NULL,color="color",size="size",name="names",ty
     ),opts)
   }
   return(res)
+}
+
+
+#' @title get_text
+#' @export
+get_text<-function(obj,node.data,text='names',extra=NULL,type="2d",xoff=0,yoff=0,zoff=0,...){
+  if(!is.null(node.data)){
+    #merge with nodes based on rowname
+    node.data<-cbind(obj$nodes,node.data[rownames(obj$nodes),])
+  }
+  #set net opts
+  if(type == "2d"){
+    opts<-list(mode="text",type="scatter",...)
+  } else {
+    opts<-list(mode="text",type="scatter3d",...)
+  }
+
+  #split list for element mapping (could be done together?)
+  res<-c(list(x=node.data$x + get_unit(node.data$x, xoff),
+              y=node.data$y + get_unit(node.data$y, yoff),
+              z=node.data$z + get_unit(node.data$z, zoff),
+              text = node.data[,text])
+         ,opts,extra)
+
+  return(list(res))
 }
 
 #' @title make_edges
@@ -206,9 +210,10 @@ get_network<-function(edge.list,type="2d",layout="fruchtermanreingold", layout.p
 
 #' @title format_legend
 #' @export
+#' @import dplyr
 format_legend<-function(obj,edges=TRUE,nodes=TRUE,width='size',color='color',size='size',name='names',node.data){
 
-  res<-list(edges=NULL,nodes=NULL)
+  res<-list()
   #edges
   if(edges){
     el<-obj$edges
@@ -230,6 +235,7 @@ format_legend<-function(obj,edges=TRUE,nodes=TRUE,width='size',color='color',siz
   }
   return(res)
 }
+
 
 
 #' @title list_ggplotly
@@ -262,6 +268,7 @@ shiny_ly<-function (obj)
 }
 
 
+#accesory fxns
 
 #' @title rgb_col
 #' @import grDevices
@@ -277,8 +284,17 @@ line_brk<-function(obj){
   paste0(lapply(obj,function(x) {paste(x,collapse="")}),collapse="<br>")
 }
 
+
+#' @title get_unit
+get_unit<-function(x,prct=10){
+  rng<-diff(range(x))*(prct/100)
+}
+
+
 #' @title test
 test<-function(){
+library(plotly)
+library(networkly)
 conn<-1
 nodes<-10
 net_size<-conn*nodes
@@ -307,33 +323,10 @@ color<-'color'
 size<-'size'
 name<-'names'
 obj<-get_network(edge.list,type=type,layout=layout)
-net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=FALSE),get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=FALSE))
+net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=FALSE),
+       get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=FALSE),
+       get_text(obj,node.data,text=name,extra=list(textfont=list(size=40)),type=type,yoff=-10,hoverinfo="none",showlegend=FALSE))
 
-#create legend #
-format_legend<-function(obj,edges=TRUE,nodes=TRUE,width='size',color='color',size='size',name='names',node.data){
-
-  res<-list(edges=NULL,nodes=NULL)
-  #edges
-  if(edges){
-    el<-obj$edges
-    vars<-c(width,color,name)
-    id<-el %>% select(one_of(vars)) %>% apply(.,1,paste,collapse="|")
-    tmp<-el[!duplicated(id),]
-    tmp$x<-tmp$y<-tmp$z<-NA
-    res$edges<-tmp
-  }
-  #nodes
-  if(nodes){
-    el<-cbind(obj$nodes,node.data)
-    vars<-c(size,color,name)
-    id<-el %>% select(one_of(vars)) %>% apply(.,1,paste,collapse="|")
-    tmp<-el[!duplicated(id),]
-    tmp$x<-tmp$y<-tmp$z<-NA
-    res$nodes<-tmp[,c("x","y","z")]
-    res$node.data<-tmp
-  }
-  return(res)
-}
 
 legend<-format_legend(obj,node.data=node.data)
 
