@@ -1,10 +1,11 @@
 Package: networkly
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1
-Date: 2016-02-21
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Title: Network visualization using plotly
+Version: 0.2
+Date: 2016-09-25
+Author: Dmitry Grapov
+Maintainer:  <createdatasol@gmail.com>
+Description: Interactive network visualization using plotly and shiny
+License: AGPL2
 LazyData: TRUE
+RoxygenNote: 5.0.1

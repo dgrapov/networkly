@@ -257,16 +257,15 @@ add_struct<-function(obj){
   structure(plotly:::add_boxed(plotly:::rm_asis(l)), class = "plotly")
 }
 
+
 #' @title shiny_ly
 #' @import plotly
 #' @export
-shiny_ly<-function (obj)
-{
-  net<-add_struct(obj)
+shiny_ly<-function(obj){
+  net <- structure(obj, class = unique(c("plotly_hash", class(obj))))
   net <- plotly:::plotly_build(net)
-  plotly:::hash_plot(df=NULL, net)
+  plotly:::hash_plot(df = NULL, net)
 }
-
 
 #accesory fxns
 
