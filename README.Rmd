@@ -146,5 +146,9 @@ shiny_ly(net)
 ## About
 ### updated `r Sys.Date()`
 
+```{r}
+sessionInfo()
+```
+
 
 
